@@ -16,6 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+function drawTable(data) {
+    for (var i = 0; i < data.length; i++) {
+        drawRow(data[i]);
+    }
+}
+
+function drawRow(rowData) {
+    var row = $("<tr />")
+    $("#personDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
+    row.append($("<td>" + rowData.id + "</td>"));
+    row.append($("<td>" + rowData.firstName + "</td>"));
+    row.append($("<td>" + rowData.lastName + "</td>"));
+}
 var app = {
     SOME_CONSTANTS : false,  // some constant
 
@@ -25,13 +38,49 @@ var app = {
         console.log("console log init");
         this.bindEvents();
         this.initFastClick();
+        // $.ajax({
+        //     type: "GET",
+        //     url: 'get-data.php',
+        //     success: function (res) {
+        //        console.log(res);
+        //     },
+        //     error: function (err) {
+                
+        //     },
+            
+        // });
+        $.ajax({
+    url: '/echo/json/',
+    type: "post",
+    dataType: "json",
+    data: {
+        json: JSON.stringify([
+            {
+            id: 1,
+            firstName: "Peter",
+            lastName: "Jhons"},
+        {
+            id: 2,
+            firstName: "David",
+            lastName: "Bowie"}
+        ]),
+        delay: 3
+    },
+    success: function(data, textStatus, jqXHR) {
+                // since we are using jQuery, you don't need to parse response
+                drawTable(data);
+            }
+        });
+                
     },
     // Bind Event Listeners
     //
     // Bind any events that are required on startup. Common events are:
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
+         document.addEventListener("deviceready", function(){
+            this.onDeviceReady();
+        },true);
     },
     initFastClick : function() {
         window.addEventListener('load', function() {
@@ -43,6 +92,18 @@ var app = {
         console.log("device ready, start making you custom calls!");
 
         // Start adding your code here....
+         $.ajax({
+            type: "GET",
+            url: 'get-data.php',
+            success: function (res) {
+               console.log(res);
+            },
+            error: function (err) {
+                
+            },
+            
+        });
 
     }
+    
 };

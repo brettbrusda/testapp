@@ -16,62 +16,54 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-function drawTable(data) {
-    for (var i = 0; i < data.length; i++) {
-        drawRow(data[i]);
-    }
-}
-
-function drawRow(rowData) {
-    var row = $("<tr />")
-    $("#personDataTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
-    row.append($("<td>" + rowData.id + "</td>"));
-    row.append($("<td>" + rowData.firstName + "</td>"));
-    row.append($("<td>" + rowData.lastName + "</td>"));
-}
 var app = {
     SOME_CONSTANTS : false,  // some constant
-
-
     // Application Constructor
     initialize: function() {
-        console.log("console log init");
         this.bindEvents();
         this.initFastClick();
-        // $.ajax({
-        //     type: "GET",
-        //     url: 'get-data.php',
-        //     success: function (res) {
-        //        console.log(res);
-        //     },
-        //     error: function (err) {
-                
-        //     },
-            
-        // });
         $.ajax({
-    url: '/echo/json/',
-    type: "post",
-    dataType: "json",
-    data: {
-        json: JSON.stringify([
-            {
-            id: 1,
-            firstName: "Peter",
-            lastName: "Jhons"},
-        {
-            id: 2,
-            firstName: "David",
-            lastName: "Bowie"}
-        ]),
-        delay: 3
-    },
-    success: function(data, textStatus, jqXHR) {
-                // since we are using jQuery, you don't need to parse response
-                drawTable(data);
-            }
+            type: "GET",
+            //url: 'http://10.111.5.56:15021/wcftest/Service1.svc/Getcyclecounts/4/40',
+            url: 'get-data.php',
+            success: function (res) {
+                console.dir(res.GetCycleCountsResult);
+               $('#table').bootstrapTable({
+                   idField: 'BIN_PRIM',
+                   columns: [{
+                        field: 'BIN_PRIM',
+                        title: 'BIN_PRIM'
+                    }, {
+                        field: 'CODE_UM_STK',
+                        title: 'CODE_UM_STK'
+                    }, {
+                        field: 'CountType',
+                        title: 'CountType'
+                    }, {
+                        field: 'DESRC_1',
+                        title: 'DESCR_1'
+                    }, {
+                        field: 'ID_ITEM',
+                        title: 'ID_ITEM'
+                    }, {
+                        field: 'ID_USER_ADD',
+                        title: 'ID_USER_ADD'
+                    }, {
+                        field: 'QTY_ONHD',
+                        title: 'QTY_ONHD',
+                        editable: {
+                            type: 'textarea'
+                        }
+                    }],
+                    data: res.GetCycleCountsResult
+                    
+                });
+            },
+            error: function (err) {
+                console.log(err);
+            },
+            
         });
-                
     },
     // Bind Event Listeners
     //
@@ -92,18 +84,6 @@ var app = {
         console.log("device ready, start making you custom calls!");
 
         // Start adding your code here....
-         $.ajax({
-            type: "GET",
-            url: 'get-data.php',
-            success: function (res) {
-               console.log(res);
-            },
-            error: function (err) {
-                
-            },
-            
-        });
 
     }
-    
 };
